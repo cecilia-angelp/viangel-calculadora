@@ -85,7 +85,7 @@ function animarNumero(idElemento, valorFinal, esDinero = true) {
 }
 
 // ==========================================
-// 3. MOTOR MATEMÁTICO REAL + EXPRÉS + GEOLOCALIZACIÓN
+// 3. MOTOR MATEMÁTICO REAL + MODALIDADES + GEOLOCALIZACIÓN
 // ==========================================
 async function calcularFleteViAngel() {
     const originInput = document.getElementById('origin-input').value;
@@ -93,9 +93,12 @@ async function calcularFleteViAngel() {
     const weightInput = document.getElementById('weight').value;
     const tollsInput = document.getElementById('tolls-amount').value;
     const isTollsChecked = document.getElementById('tolls-check').checked;
-    const isExpressChecked = document.getElementById('express-check').checked;
     const isOtroOrigenChecked = document.getElementById('checkOtroOrigen').checked;
     const btnCalc = document.getElementById('btn-calcular');
+
+    // Capturar recargo (0, 0.30 o 0.60)
+    const recargoRadio = document.querySelector('input[name="tipoServicio"]:checked');
+    const porcentajeRecargo = recargoRadio ? parseFloat(recargoRadio.value) : 0;
 
     if (!originInput.trim()) {
         alert("Por favor, ingresa una dirección de origen.");
@@ -115,7 +118,7 @@ async function calcularFleteViAngel() {
 
         // 1. ORIGEN (Fijo o Dinámico)
         if (!isOtroOrigenChecked) {
-            // Coordenadas fijas Osvaldo Croquevielle 2207 (Aeropuerto / Pudahuel)
+            // Coordenadas fijas Osvaldo Croquevielle 2207
             startLat = -33.3930;
             startLon = -70.7937;
         } else {
@@ -163,27 +166,19 @@ async function calcularFleteViAngel() {
 
         const kilometrosReales = osrmData.routes[0].distance / 1000;
 
-        // TARIFAS BASE
+        // TARIFAS BASE (Actualizado a $1.100/km)
         const baseFija = 18000;
         const valorPorKm = kilometrosReales * 1100;
         const pesoKilo = (parseFloat(weightInput) || 0) * 50;
 
-        let totalNeto = baseFija + valorPorKm + pesoKilo;
+        let costoBaseTotal = baseFija + valorPorKm + pesoKilo;
 
-        // RECARGO EXPRÉS / EXTRAORDINARIO (+30%)
-        if (isExpressChecked) {
-            totalNeto = totalNeto * 1.30;
-        }
+        // APLICAR RECARGO SEGÚN MODALIDAD
+        let totalNeto = costoBaseTotal * (1 + porcentajeRecargo);
 
         const iva = totalNeto * 0.19;
         const peajes = isTollsChecked ? (parseFloat(tollsInput) || 0) : 0; 
         const totalMasIva = totalNeto + iva + peajes;
-
-        // CONTROL INTERNO: BENCINA Y GANANCIA
-        const rendimientoN400 = 12; 
-        const precioBencina95 = 1600; 
-        const gastoBencinaBolsillo = ((kilometrosReales * 2) / rendimientoN400) * precioBencina95;
-        const gananciaLimpiaViAngel = totalMasIva - gastoBencinaBolsillo - peajes;
 
         // ANIMACIONES DE RESULTADO
         animarNumero('txt-distancia', kilometrosReales, false);
@@ -192,25 +187,29 @@ async function calcularFleteViAngel() {
         animarNumero('txt-peajes', peajes, true);
         animarNumero('txt-total', totalMasIva, true);
 
- 
+        // TEXTO SEGÚN MODALIDAD PARA WHATSAPP
+        let servicioTxt = "";
+        if (porcentajeRecargo === 0.30) {
+            servicioTxt = " [SERVICIO EXTRAORDINARIO (+30%)]";
+        } else if (porcentajeRecargo === 0.60) {
+            servicioTxt = " [SERVICIO NON-STOP 24/7 - DOBLE CHOFER (+60%)]";
+        }
 
-// LINK A WHATSAPP
-const clp = (val) => '$' + Math.round(val).toLocaleString('es-CL');
-const expressTxt = isExpressChecked ? " [SERVICIO EXPRÉS (+30%)]" : "";
+        // PLANTILLA DE MENSAJE DE WHATSAPP
+        const clp = (val) => '$' + Math.round(val).toLocaleString('es-CL');
 
-const mensaje = `Hola ViAngel Logistics! 👋
+        const textoMensaje = `Hola ViAngel Logistics! 👋
 Deseo solicitar la cotización para un flete con los siguientes datos:
 
 *Origen:* ${originInput}
-*Destino:* ${destinationInput}${expressTxt}
+*Destino:* ${destinationInput}${servicioTxt}
 
 --- *RESUMEN DE COTIZACIÓN* ---
 • *Neto:* ${clp(totalNeto)}
 • *IVA (19%):* ${clp(iva)}
 • *Peajes:* ${clp(peajes)}
 
-*Total a Pagar:* ${clp(totalMasIva)}`;
-
+*Total a Pagar:* ${clp(totalMasIva)}
 
 Quedo atento(a) a su confirmación y disponibilidad. ¡Muchas gracias!`;
 
@@ -220,7 +219,7 @@ Quedo atento(a) a su confirmación y disponibilidad. ¡Muchas gracias!`;
         console.error("Detalle del error:", error);
         alert("Ocurrió una interrupción momentánea de conexión con la API de mapas. Intenta presionar 'CALCULAR COSTO TOTAL' nuevamente.");
     } finally {
-        // SIEMPRE REINICIA EL BOTÓN
+        // REINICIAR BOTÓN
         btnCalc.innerText = "CALCULAR COSTO TOTAL";
         btnCalc.disabled = false;
     }
