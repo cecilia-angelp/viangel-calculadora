@@ -1,226 +1,184 @@
-// ==========================================
-// 1. BLOQUEO DE SEGURIDAD POR CLAVE
-// ==========================================
-(function verificarAcceso() {
-    const CLAVE_CORRECTA = "fletesmi";
-    let intensionClave = prompt("🔒 Acceso Restringido - ViAngel\nIngrese la contraseña para continuar:");
+// VARIABLES GLOBALES PARA MANTENER LA INFORMACIÓN DEL CÁLCULO
+let resumenCotizacion = {
+    origen: "",
+    destino: "",
+    distanciaKm: 0,
+    pesoKg: 0,
+    neto: 0,
+    iva: 0,
+    peajes: 0,
+    total: 0,
+    servicioDetalle: ""
+};
 
-    if (intensionClave !== CLAVE_CORRECTA) {
-        alert("❌ Contraseña incorrecta. Acceso denegado.");
-        document.body.innerHTML = `
-            <div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#081729; color:white; font-family:sans-serif; text-align:center;">
-                <div>
-                    <h1 style="font-size:3rem; margin-bottom:10px;">🔒 Acceso Restringido</h1>
-                    <p style="color:#94a3b8; font-size:1.2rem;">Debes ingresar la contraseña correcta para ver la calculadora.</p>
-                </div>
-            </div>
-        `;
-        throw new Error("Acceso no autorizado.");
-    }
-})();
-
-// MODALES Y FOCO
-function abrirModal(tipo) { document.getElementById('modal-' + tipo).style.display = 'flex'; }
-function cerrarModal(tipo) { document.getElementById('modal-' + tipo).style.display = 'none'; }
-
-window.onclick = function(event) {
-    if (event.target === document.getElementById('modal-servicios')) cerrarModal('servicios');
-    if (event.target === document.getElementById('modal-nosotros')) cerrarModal('nosotros');
-}
-
-function enfocarCalculadora() {
-    const card = document.getElementById('calc-card');
-    card.classList.add('calculator-focus');
-    setTimeout(() => card.classList.remove('calculator-focus'), 1200);
-}
-
-function activarCajitaPeaje() {
-    const isChecked = document.getElementById('tolls-check').checked;
-    const inputPeaje = document.getElementById('tolls-amount');
-    inputPeaje.disabled = !isChecked; 
-    if (!isChecked) { inputPeaje.value = 0; } else { inputPeaje.focus(); }
-}
-
-// ==========================================
-// 2. FUNCIÓN CAMBIAR ORIGEN
-// ==========================================
-function toggleOtroOrigen() {
-    const check = document.getElementById('checkOtroOrigen');
-    const inputOrigen = document.getElementById('origin-input');
-
-    if (check.checked) {
-        inputOrigen.value = "";
-        inputOrigen.disabled = false;
-        inputOrigen.classList.remove('input-disabled');
-        inputOrigen.placeholder = "Escribe la dirección de origen...";
-        inputOrigen.focus();
+// MOSTRAR U OCULTAR EL CAMPO DE ORIGEN ADICIONAL
+function toggleOrigenCustom() {
+    const checkOrigen = document.getElementById('checkOtroOrigen');
+    const container = document.getElementById('origenContainer');
+    
+    if (checkOrigen.checked) {
+        container.style.display = 'block';
     } else {
-        inputOrigen.value = "Osvaldo croquevielle 2207 - terminal aduanero";
-        inputOrigen.disabled = true;
-        inputOrigen.classList.add('input-disabled');
+        container.style.display = 'none';
+        document.getElementById('originInput').value = '';
     }
 }
 
-// ANIMACIÓN DE NÚMEROS
-function animarNumero(idElemento, valorFinal, esDinero = true) {
-    const elemento = document.getElementById(idElemento);
-    let valorActual = 0;
-    const duracionAnimacion = 1000; 
-    const intervalos = 30; 
-    const incremento = valorFinal / (duracionAnimacion / intervalos);
+// CONTROL DE MUTUA EXCLUSIÓN PARA SERVICIOS ESPECIALES
+function validarServiciosEspeciales(checkboxActual) {
+    const checkExtra = document.getElementById('checkExtraordinario');
+    const checkNonStop = document.getElementById('checkNonStop');
 
-    const timer = setInterval(() => {
-        valorActual += incremento;
-        if ((incremento > 0 && valorActual >= valorFinal) || (incremento < 0 && valorActual <= valorFinal) || valorFinal === 0) {
-            valorActual = valorFinal;
-            clearInterval(timer);
-        }
-        
-        if(esDinero) {
-            elemento.innerText = '$' + Math.round(valorActual).toLocaleString('es-CL');
-        } else {
-            elemento.innerText = valorActual.toFixed(1) + ' Km';
-        }
-    }, intervalos);
+    if (checkboxActual.id === 'checkExtraordinario' && checkboxActual.checked) {
+        checkNonStop.checked = false;
+    } else if (checkboxActual.id === 'checkNonStop' && checkboxActual.checked) {
+        checkExtra.checked = false;
+    }
 }
 
-// ==========================================
-// 3. MOTOR MATEMÁTICO REAL + MODALIDADES + GEOLOCALIZACIÓN
-// ==========================================
+// FUNCIÓN PRINCIPAL DE CÁLCULO
 async function calcularFleteViAngel() {
-    const originInput = document.getElementById('origin-input').value;
-    const destinationInput = document.getElementById('destination').value;
-    const weightInput = document.getElementById('weight').value;
-    const tollsInput = document.getElementById('tolls-amount').value;
-    const isTollsChecked = document.getElementById('tolls-check').checked;
-    const isOtroOrigenChecked = document.getElementById('checkOtroOrigen').checked;
-    const btnCalc = document.getElementById('btn-calcular');
+    const btnCalcular = document.getElementById('btnCalcular');
+    const resultBox = document.getElementById('resultBox');
+    
+    // CAPTURA DE INPUTS
+    const isCustomOrigin = document.getElementById('checkOtroOrigen').checked;
+    const originInput = isCustomOrigin ? document.getElementById('originInput').value.trim() : "Terminal Aduanero Pudahuel, Santiago";
+    const destinationInput = document.getElementById('destinationInput').value.trim();
+    const weightInput = parseFloat(document.getElementById('weightInput').value) || 0;
+    
+    const peajeChecked = document.getElementById('peajeCheck').checked;
+    const peajeVal = peajeChecked ? (parseFloat(document.getElementById('peajeInput').value) || 0) : 0;
 
-    // Capturar recargo (0, 0.30 o 0.60)
-    const recargoRadio = document.querySelector('input[name="tipoServicio"]:checked');
-    const porcentajeRecargo = recargoRadio ? parseFloat(recargoRadio.value) : 0;
-
-    if (!originInput.trim()) {
-        alert("Por favor, ingresa una dirección de origen.");
+    // VALIDACIÓN DE DESTINO
+    if (!destinationInput) {
+        alert("Por favor, ingresa una ciudad o dirección de destino.");
         return;
     }
 
-    if (!destinationInput.trim()) {
-        alert("Por favor, ingresa un destino para calcular.");
+    if (isCustomOrigin && !originInput) {
+        alert("Ingresaste 'Otro origen', por favor escribe la dirección de origen.");
         return;
     }
 
-    btnCalc.innerText = "CALCULANDO RUTA...";
-    btnCalc.disabled = true;
+    // INDICADOR DE CARGA EN BOTÓN
+    btnCalcular.disabled = true;
+    btnCalcular.innerText = "CALCULANDO RUTA...";
 
     try {
-        let startLon, startLat;
+        // GEOLOCALIZACIÓN FORZADA A CHILE (&countrycodes=cl)
+        const geoOriginUrl = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=cl&q=${encodeURIComponent(originInput)}`;
+        const geoDestUrl = `https://nominatim.openstreetmap.org/search?format=json&countrycodes=cl&q=${encodeURIComponent(destinationInput)}`;
 
-        // 1. ORIGEN (Fijo o Dinámico)
-        if (!isOtroOrigenChecked) {
-            // Coordenadas fijas Osvaldo Croquevielle 2207
-            startLat = -33.3930;
-            startLon = -70.7937;
-        } else {
-            const geoOriginUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(originInput + ", Chile")}`;
-            const geoOriginRes = await fetch(geoOriginUrl);
-            
-            if (!geoOriginRes.ok) throw new Error("Error al consultar dirección de origen.");
-            const geoOriginData = await geoOriginRes.json();
+        const [resOrigin, resDest] = await Promise.all([
+            fetch(geoOriginUrl).then(r => r.json()),
+            fetch(geoDestUrl).then(r => r.json())
+        ]);
 
-            if (!geoOriginData || geoOriginData.length === 0) {
-                alert("No se encontró la dirección de ORIGEN. Intenta escribirla sin caracteres especiales.");
-                return;
-            }
-
-            startLon = geoOriginData[0].lon;
-            startLat = geoOriginData[0].lat;
-        }
-
-        // 2. DESTINO
-        const geoDestUrl = `https://nominatim.openstreetmap.org/search?format=json&q=${encodeURIComponent(destinationInput + ", Chile")}`;
-        const geoDestRes = await fetch(geoDestUrl);
-
-        if (!geoDestRes.ok) throw new Error("Error al consultar el servidor de mapas.");
-        const geoDestData = await geoDestRes.json();
-
-        if (!geoDestData || geoDestData.length === 0) {
-            alert("No se encontró el DESTINO. Intenta escribir la comuna y dirección más clara (Ej: 'Canada 185, Providencia').");
+        if (!resOrigin || resOrigin.length === 0) {
+            alert("No logramos ubicar el punto de origen en Chile. Sé más específico.");
+            btnCalcular.disabled = false;
+            btnCalcular.innerText = "CALCULAR COSTO TOTAL";
             return;
         }
 
-        const endLon = geoDestData[0].lon;
-        const endLat = geoDestData[0].lat;
-
-        // 3. RUTA CARRETERA (OSRM)
-        const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${startLon},${startLat};${endLon},${endLat}?overview=false`;
-        const osrmRes = await fetch(osrmUrl);
-
-        if (!osrmRes.ok) throw new Error("El servidor OSRM no respondió a tiempo.");
-        const osrmData = await osrmRes.json();
-
-        if (!osrmData.routes || osrmData.routes.length === 0) {
-            alert("Error al trazar la ruta en carretera.");
+        if (!resDest || resDest.length === 0) {
+            alert("No logramos ubicar el punto de destino en Chile. Prueba agregando la comuna o región.");
+            btnCalcular.disabled = false;
+            btnCalcular.innerText = "CALCULAR COSTO TOTAL";
             return;
         }
 
-        const kilometrosReales = osrmData.routes[0].distance / 1000;
+        const lon1 = resOrigin[0].lon;
+        const lat1 = resOrigin[0].lat;
+        const lon2 = resDest[0].lon;
+        const lat2 = resDest[0].lat;
 
-        // TARIFAS BASE (Actualizado a $1.100/km)
-        const baseFija = 18000;
-        const valorPorKm = kilometrosReales * 1100;
-        const pesoKilo = (parseFloat(weightInput) || 0) * 50;
+        // CÁLCULO DE RUTA CON OSRM
+        const osrmUrl = `https://router.project-osrm.org/route/v1/driving/${lon1},${lat1};${lon2},${lat2}?overview=false`;
+        const resRoute = await fetch(osrmUrl).then(r => r.json());
 
-        let costoBaseTotal = baseFija + valorPorKm + pesoKilo;
-
-        // APLICAR RECARGO SEGÚN MODALIDAD
-        let totalNeto = costoBaseTotal * (1 + porcentajeRecargo);
-
-        const iva = totalNeto * 0.19;
-        const peajes = isTollsChecked ? (parseFloat(tollsInput) || 0) : 0; 
-        const totalMasIva = totalNeto + iva + peajes;
-
-        // ANIMACIONES DE RESULTADO
-        animarNumero('txt-distancia', kilometrosReales, false);
-        animarNumero('txt-neto', totalNeto, true);
-        animarNumero('txt-iva', iva, true);
-        animarNumero('txt-peajes', peajes, true);
-        animarNumero('txt-total', totalMasIva, true);
-
-        // TEXTO SEGÚN MODALIDAD PARA WHATSAPP
-        let servicioTxt = "";
-        if (porcentajeRecargo === 0.30) {
-            servicioTxt = " [SERVICIO EXTRAORDINARIO (+30%)]";
-        } else if (porcentajeRecargo === 0.60) {
-            servicioTxt = " [SERVICIO NON-STOP 24/7 - DOBLE CHOFER (+60%)]";
+        if (!resRoute || !resRoute.routes || resRoute.routes.length === 0) {
+            alert("No fue posible calcular la ruta terrestre.");
+            btnCalcular.disabled = false;
+            btnCalcular.innerText = "CALCULAR COSTO TOTAL";
+            return;
         }
 
-        // PLANTILLA DE MENSAJE DE WHATSAPP
-        const clp = (val) => '$' + Math.round(val).toLocaleString('es-CL');
+        const distanceMeters = resRoute.routes[0].distance;
+        const distanceKm = parseFloat((distanceMeters / 1000).toFixed(1));
 
-        const textoMensaje = `Hola ViAngel Logistics! 👋
-Deseo solicitar la cotización para un flete con los siguientes datos:
+        // TARIFAS BASE
+        const TARIFA_POR_KM = 1100;
+        let subtotalKm = distanceKm * TARIFA_POR_KM;
 
-*Origen:* ${originInput}
-*Destino:* ${destinationInput}${servicioTxt}
+        // EVALUACIÓN DE SERVICIOS ESPECIALES
+        const isExtraChecked = document.getElementById('checkExtraordinario').checked;
+        const isNonStopChecked = document.getElementById('checkNonStop').checked;
 
---- *RESUMEN DE COTIZACIÓN* ---
-• *Neto:* ${clp(totalNeto)}
-• *IVA (19%):* ${clp(iva)}
-• *Peajes:* ${clp(peajes)}
+        let recargoServicio = 0;
+        let servicioTexto = "Estándar";
 
-*Total a Pagar:* ${clp(totalMasIva)}
+        if (isNonStopChecked) {
+            recargoServicio = subtotalKm * 0.60;
+            servicioTexto = "Non-Stop 24/7 (Doble Chofer)";
+        } else if (isExtraChecked) {
+            recargoServicio = subtotalKm * 0.30;
+            servicioTexto = "Extraordinario";
+        }
 
-Quedo atento(a) a su confirmación y disponibilidad. ¡Muchas gracias!`;
+        // FÓRMULA FINAL
+        const totalNeto = Math.round(subtotalKm + recargoServicio);
+        const totalIva = Math.round(totalNeto * 0.19);
+        const totalFinal = Math.round(totalNeto + totalIva + peajeVal);
 
-        document.getElementById('whatsapp-link').href = `https://wa.me/56935371521?text=${encodeURIComponent(textoMensaje)}`;
+        // ACTUALIZAR INTERFAZ
+        document.getElementById('resDistancia').innerText = `${distanceKm.toLocaleString('es-CL')} Km`;
+        document.getElementById('resNeto').innerText = `$${totalNeto.toLocaleString('es-CL')}`;
+        document.getElementById('resIva').innerText = `$${totalIva.toLocaleString('es-CL')}`;
+        document.getElementById('resPeajes').innerText = `$${peajeVal.toLocaleString('es-CL')}`;
+        document.getElementById('resTotal').innerText = `$${totalFinal.toLocaleString('es-CL')}`;
+
+        // RESPALDAR DATOS PARA WHATSAPP
+        resumenCotizacion = {
+            origen: originInput,
+            destino: destinationInput,
+            distanciaKm: distanceKm,
+            pesoKg: weightInput,
+            neto: totalNeto,
+            iva: totalIva,
+            peajes: peajeVal,
+            total: totalFinal,
+            servicioDetalle: servicioTexto
+        };
+
+        resultBox.style.display = 'block';
 
     } catch (error) {
-        console.error("Detalle del error:", error);
-        alert("Ocurrió una interrupción momentánea de conexión con la API de mapas. Intenta presionar 'CALCULAR COSTO TOTAL' nuevamente.");
+        console.error("Error en la cotización:", error);
+        alert("Hubo un detalle de conexión al calcular la ruta. Inténtalo de nuevo.");
     } finally {
-        // REINICIAR BOTÓN
-        btnCalc.innerText = "CALCULAR COSTO TOTAL";
-        btnCalc.disabled = false;
+        btnCalcular.disabled = false;
+        btnCalcular.innerText = "CALCULAR COSTO TOTAL";
     }
+}
+
+// ENVIAR RESUMEN POR WHATSAPP (SIN EMOJIS)
+function enviarWhatsApp() {
+    const telefonoViAngel = "569XXXXXXXX";
+
+    let mensaje = `Hola ViAngel Logistics, quiero solicitar una cotización con los siguientes detalles:\n\n`;
+    mensaje += `*Origen:* ${resumenCotizacion.origen}\n`;
+    mensaje += `*Destino:* ${resumenCotizacion.destino}\n`;
+    mensaje += `*Distancia:* ${resumenCotizacion.distanciaKm} Km\n`;
+    mensaje += `*Carga:* ${resumenCotizacion.pesoKg} Kg\n`;
+    mensaje += `*Servicio:* ${resumenCotizacion.servicioDetalle}\n\n`;
+    mensaje += `*Subtotal Neto:* $${resumenCotizacion.neto.toLocaleString('es-CL')}\n`;
+    mensaje += `*IVA (19%):* $${resumenCotizacion.iva.toLocaleString('es-CL')}\n`;
+    mensaje += `*Peajes:* $${resumenCotizacion.peajes.toLocaleString('es-CL')}\n`;
+    mensaje += `*TOTAL ESTIMADO:* $${resumenCotizacion.total.toLocaleString('es-CL')}\n\n`;
+    mensaje += `Quedo atento a la confirmación de la disponibilidad.`;
+
+    const urlWa = `https://wa.me/${telefonoViAngel}?text=${encodeURIComponent(mensaje)}`;
+    window.open(urlWa, '_blank');
 }
