@@ -165,7 +165,7 @@ async function calcularFleteViAngel() {
 
         // TARIFAS BASE
         const baseFija = 18000;
-        const valorPorKm = kilometrosReales * 990;
+        const valorPorKm = kilometrosReales * 1100;
         const pesoKilo = (parseFloat(weightInput) || 0) * 50;
 
         let totalNeto = baseFija + valorPorKm + pesoKilo;
@@ -192,21 +192,28 @@ async function calcularFleteViAngel() {
         animarNumero('txt-peajes', peajes, true);
         animarNumero('txt-total', totalMasIva, true);
 
-        // LINK A WHATSAPP
-        const clp = (val) => '$' + Math.round(val).toLocaleString('es-CL');
-        const expressTxt = isExpressChecked ? " [SERVICIO EXPRÉS (+30%)]" : "";
-        
-        const textoMensaje = `Hola ViAngel, solicito flete desde ${originInput} hasta ${destinationInput}${expressTxt}.\n\n` +
-                             `--- DESGLOSE CLIENTE ---\n` +
-                             `Neto: ${clp(totalNeto)}\n` +
-                             `IVA (19%): ${clp(iva)}\n` +
-                             `Peajes: ${clp(peajes)}\n` +
-                             `Total a Pagar: ${clp(totalMasIva)}\n\n` +
-                             `--- CONTROL INTERNO PRIVADO ---\n` +
-                             `Distancia: ${kilometrosReales.toFixed(1)} Km\n` +
-                             `Costo Combustible: ${clp(gastoBencinaBolsillo)}\n` +
-                             `Ganancia Real Estimada: ${clp(gananciaLimpiaViAngel)}`;
-        
+ 
+
+// LINK A WHATSAPP
+const clp = (val) => '$' + Math.round(val).toLocaleString('es-CL');
+const expressTxt = isExpressChecked ? " [SERVICIO EXPRÉS (+30%)]" : "";
+
+const mensaje = `Hola ViAngel Logistics! 👋
+Deseo solicitar la cotización para un flete con los siguientes datos:
+
+*Origen:* ${originInput}
+*Destino:* ${destinationInput}${expressTxt}
+
+--- *RESUMEN DE COTIZACIÓN* ---
+• *Neto:* ${clp(totalNeto)}
+• *IVA (19%):* ${clp(iva)}
+• *Peajes:* ${clp(peajes)}
+
+*Total a Pagar:* ${clp(totalMasIva)}`;
+
+
+Quedo atento(a) a su confirmación y disponibilidad. ¡Muchas gracias!`;
+
         document.getElementById('whatsapp-link').href = `https://wa.me/56935371521?text=${encodeURIComponent(textoMensaje)}`;
 
     } catch (error) {
