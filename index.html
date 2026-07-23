@@ -1,125 +1,187 @@
+
+
 <!DOCTYPE html>
 <html lang="es">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>ViAngel Logistics - Cotizador Express</title>
+    <title>ViAngel Logistics</title>
     <link rel="stylesheet" href="index.css">
-    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
 </head>
 <body>
 
-    <div class="calculator-card">
+    <div class="background-landscape"></div>
+
+    <div class="clouds-layer">
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
+    </div>
+
+    <header class="navbar">
+        <div class="logo">Vi<span>Angel</span></div>
+        <nav class="menu">
+            <a href="javascript:void(0)" onclick="abrirModal('servicios')">Servicios</a>
+            <a href="javascript:void(0)" onclick="enfocarCalculadora()">Calculadora</a>
+            <a href="javascript:void(0)" onclick="abrirModal('nosotros')">Nosotros</a>
+            <a href="javascript:void(0)" onclick="enfocarCalculadora()">Contacto</a>
+        </nav>
+        <button class="btn-cotizacion" onclick="enfocarCalculadora()">Solicitar Cotización</button>
+    </header>
+
+    <main class="main-container">
         
-        <!-- HEADER -->
-        <div class="header">
-            <h2>COTIZADOR DE FLETES</h2>
-            <p>ViAngel Logistics & Freight</p>
+        <div class="left-panel">
+            <div class="titles-wrapper">
+                <span class="sub-heading">CALCULADORA DE LOGÍSTICA</span>
+                
+                <h1 class="hero-title">
+                    Te invitamos a
+                    <span>planificar</span>
+                    tu próximo flete
+                </h1>
+
+                <p class="hero-subtitle">
+                    Calcula el costo estimado de tu envío en segundos. Transparente, rápido y confiable.
+                </p>
+            </div>
+            <img src="furgon.png" alt="Chevrolet N400" class="van-image">
         </div>
 
-        <!-- FORMULARIO DE CÁLCULO -->
-        <div class="form-container">
-
-            <!-- ORIGEN ADICIONAL (OCULTO POR DEFECTO) -->
-            <div id="origenContainer" style="display: none; margin-bottom: 12px;">
-                <label for="originInput">ORIGEN PERSONALIZADO</label>
-                <input type="text" id="originInput" placeholder="Ej: Terminal San Borja, Estación Central">
-            </div>
-
-            <!-- CHECKBOX OTRO ORIGEN -->
-            <div style="display: flex; align-items: center; gap: 6px; margin-bottom: 12px;">
-                <input type="checkbox" id="checkOtroOrigen" onchange="toggleOrigenCustom()" style="width: 15px; height: 15px; cursor: pointer;">
-                <label for="checkOtroOrigen" style="font-size: 11px; font-weight: 700; color: #2563eb; cursor: pointer; text-transform: none; margin: 0;">
-                    Desde otro origen
-                </label>
-            </div>
-
-            <!-- DESTINO -->
-            <div class="input-group">
-                <label for="destinationInput">DESTINO</label>
-                <input type="text" id="destinationInput" placeholder="Ej: Puerto Varas, Mejillones, Providencia">
-            </div>
-
-            <!-- CARGA -->
-            <div class="input-group">
-                <label for="weightInput">CARGA (KG)</label>
-                <input type="number" id="weightInput" value="250" placeholder="Ej: 250">
-            </div>
-
-            <!-- PEAJE Y COPEC -->
-            <div class="peaje-group">
-                <div style="display: flex; align-items: center; gap: 8px;">
-                    <input type="checkbox" id="peajeCheck" checked style="width: 18px; height: 18px; cursor: pointer;">
-                    <label for="peajeCheck" style="margin: 0; font-weight: 700;">Peaje ($)</label>
-                </div>
-                <input type="number" id="peajeInput" value="40000" class="peaje-input">
-                <a href="https://www.copec.cl" target="_blank" class="btn-copec">
-                    <span>COPEC</span>
-                </a>
-            </div>
-
-            <!-- SERVICIOS ESPECIALES OPCIONALES -->
-            <div style="margin-top: 14px; margin-bottom: 16px; display: flex; flex-direction: column; gap: 8px;">
+        <div class="right-panel">
+            <div class="calculator-card" id="calc-card">
+                <h2>ViAngel Logistics Calculator</h2>
                 
-                <!-- Opción Extraordinaria -->
-                <div style="display: flex; align-items: center; gap: 6px;" title="Despacho prioritario de salida inmediata o en horario especial/nocturno con 1 conductor.">
-                    <input type="checkbox" id="checkExtraordinario" onchange="validarServiciosEspeciales(this)" style="width: 15px; height: 15px; cursor: pointer;">
-                    <label for="checkExtraordinario" style="font-size: 11px; font-weight: 700; color: #2563eb; cursor: pointer; text-transform: none; margin: 0;">
-                        Servicio Extraordinario (+30%)
-                    </label>
+                <!-- ORIGEN DINÁMICO -->
+                <div class="form-group">
+                    <label>Origen</label>
+                    <input type="text" id="origin-input" value="Osvaldo croquevielle 2207 - terminal aduanero" disabled class="input-disabled">
+                    
+                    <div style="margin-top: 6px; display: flex; align-items: center; gap: 6px;">
+                        <input type="checkbox" id="checkOtroOrigen" onchange="toggleOtroOrigen()" style="width: 15px; height: 15px; cursor: pointer;">
+                        <label for="checkOtroOrigen" style="font-size: 11px; font-weight: 700; color: #2563eb; cursor: pointer; text-transform: none; margin: 0;">Desde otro origen</label>
+                    </div>
                 </div>
 
-                <!-- Opción Non-Stop -->
-                <div style="display: flex; align-items: center; gap: 6px;" title="Ruta continua de larga distancia con 2 conductores en relevo. El vehículo no se detiene para entregas de máxima urgencia interregional.">
-                    <input type="checkbox" id="checkNonStop" onchange="validarServiciosEspeciales(this)" style="width: 15px; height: 15px; cursor: pointer;">
-                    <label for="checkNonStop" style="font-size: 11px; font-weight: 700; color: #2563eb; cursor: pointer; text-transform: none; margin: 0;">
-                        Servicio Non-Stop 24/7 (Doble Chofer) (+60%)
-                    </label>
+                <div class="form-group">
+                    <label>Destino</label>
+                    <input type="text" id="destination" placeholder="¿A dónde enviamos?">
                 </div>
 
+                <div class="grid-inputs">
+                    <div class="form-group">
+                        <label>Carga (Kg)</label>
+                        <input type="number" id="weight" value="1" min="0" step="0.1">
+                    </div>
+                </div>
+
+                <div class="tools-container">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="tolls-check" onchange="activarCajitaPeaje()">
+                        <label for="tolls-check">Peaje ($)</label>
+                    </div>
+                    
+                    <input type="number" id="tolls-amount" value="0" min="0" disabled class="input-peaje" placeholder="Ej: 15000">
+
+                    <a href="https://planificar.copec.cl/?vehicle_type=combustion" target="_blank" class="btn-copec" title="Calcular en Copec">
+                        <i class="fas fa-route"></i> Copec
+                    </a>
+                </div>
+
+                <!-- SERVICIOS ESPECIALES OPCIONALES CON ESTILO AZUL SUTIL Y TOOLTIPS -->
+                <div style="margin-top: 12px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 8px;">
+                    
+                    <div style="display: flex; align-items: center; gap: 6px;" title="Despacho prioritario de salida inmediata o en horario especial/nocturno con 1 conductor.">
+                        <input type="checkbox" id="extraordinario-check" onchange="validarServiciosEspeciales(this)" style="width: 15px; height: 15px; cursor: pointer;">
+                        <label for="extraordinario-check" style="font-size: 11px; font-weight: 700; color: #2563eb; cursor: pointer; text-transform: none; margin: 0;">
+                            Servicio Extraordinario (+30%)
+                        </label>
+                    </div>
+
+                    <div style="display: flex; align-items: center; gap: 6px;" title="Ruta continua de larga distancia con 2 conductores en relevo. El vehículo no se detiene para entregas de máxima urgencia interregional.">
+                        <input type="checkbox" id="nonstop-check" onchange="validarServiciosEspeciales(this)" style="width: 15px; height: 15px; cursor: pointer;">
+                        <label for="nonstop-check" style="font-size: 11px; font-weight: 700; color: #2563eb; cursor: pointer; text-transform: none; margin: 0;">
+                            Servicio Non-Stop 24/7 (Doble Chofer) (+60%)
+                        </label>
+                    </div>
+
+                </div>
+
+                <button class="btn-calc" onclick="calcularFleteViAngel()" id="btn-calcular">CALCULAR COSTO TOTAL</button>
+
+                <div class="results-box" id="results">
+                    <div class="result-row distance-row">
+                        <span>Distancia Calculada:</span>
+                        <span id="txt-distancia">0.0 Km</span>
+                    </div>
+
+                    <div class="result-row">
+                        <span>Total Neto:</span>
+                        <span id="txt-neto">$0</span>
+                    </div>
+                    <div class="result-row">
+                        <span>IVA (19%):</span>
+                        <span id="txt-iva">$0</span>
+                    </div>
+                    <div class="result-row line-break">
+                        <span>Total Peajes:</span>
+                        <span id="txt-peajes">$0</span>
+                    </div>
+                    <div class="total-row">
+                        <span>TOTAL + IVA:</span>
+                        <span id="txt-total">$0</span>
+                    </div>
+
+                    <a href="#" id="whatsapp-link" target="_blank" class="btn-whatsapp">
+                        <i class="fab fa-whatsapp"></i> CONTACTAR POR WHATSAPP
+                    </a>
+                </div>
             </div>
+        </div>
+    </main>
 
-            <!-- BOTÓN PRINCIPAL -->
-            <button id="btnCalcular" onclick="calcularFleteViAngel()" class="btn-primary">
-                CALCULAR COSTO TOTAL
-            </button>
-
-            <!-- RESULTADOS -->
-            <div id="resultBox" class="result-box" style="display: none;">
-                <hr style="border: 0; border-top: 1px solid #e2e8f0; margin: 15px 0;">
-                
-                <div class="result-row">
-                    <span>Distancia Calculada:</span>
-                    <strong id="resDistancia">0 Km</strong>
-                </div>
-                <div class="result-row">
-                    <span>Total Neto:</span>
-                    <strong id="resNeto">$0</strong>
-                </div>
-                <div class="result-row">
-                    <span>IVA (19%):</span>
-                    <strong id="resIva">$0</strong>
-                </div>
-                <div class="result-row">
-                    <span>Total Peajes:</span>
-                    <strong id="resPeajes">$0</strong>
-                </div>
-
-                <div class="total-row">
-                    <span>TOTAL + IVA:</span>
-                    <span id="resTotal" class="total-amount">$0</span>
-                </div>
-
-                <button id="btnWhatsapp" onclick="enviarWhatsApp()" class="btn-whatsapp">
-                    <svg width="20" height="20" fill="currentColor" viewBox="0 0 24 24"><path d="M.057 24l1.687-6.163c-1.041-1.804-1.588-3.849-1.587-5.946.003-6.556 5.338-11.891 11.893-11.891 3.181.001 6.167 1.24 8.413 3.488 2.245 2.248 3.481 5.236 3.48 8.414-.003 6.557-5.338 11.892-11.893 11.892-1.99-.001-3.951-.5-5.688-1.448l-6.305 1.654zm6.597-3.807c1.676.995 3.276 1.591 5.392 1.592 5.448 0 9.886-4.434 9.889-9.885.002-5.462-4.415-9.89-9.881-9.892-5.452 0-9.887 4.434-9.889 9.884-.001 2.225.651 3.891 1.746 5.634l-.999 3.648 3.742-.981zm11.387-5.464c-.074-.124-.272-.198-.57-.347-.297-.149-1.758-.868-2.031-.967-.272-.099-.47-.149-.669.149-.198.297-.768.967-.941 1.165-.173.198-.347.223-.644.074-.297-.149-1.255-.462-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.297-.347.446-.521.151-.172.2-.296.3-.495.099-.198.05-.372-.025-.521-.075-.148-.669-1.611-.916-2.206-.242-.579-.487-.501-.669-.51l-.57-.01c-.198 0-.52.074-.792.372s-1.04 1.016-1.04 2.479 1.065 2.876 1.213 3.074c.149.198 2.095 3.2 5.076 4.487.709.306 1.263.489 1.694.626.712.226 1.36.194 1.872.118.571-.085 1.758-.719 2.006-1.413.248-.695.248-1.29.173-1.414z"/></svg>
-                    <span>CONTACTAR POR WHATSAPP</span>
-                </button>
-            </div>
-
+    <div id="modal-servicios" class="modal-overlay" onclick="cerrarModal('servicios')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="cerrarModal('servicios')">&times;</button>
+            <h3>Nuestros Servicios Especializados</h3>
+            <ul class="services-list">
+                <li><strong>Servido:</strong> Control y retiro rápido en aduanas y terminales de carga.</li>
+                <li><strong>Seguro:</strong> Monitoreo constante del estado y resguardo de sus mercancías.</li>
+                <li><strong>Delicado:</strong> Manipulación y estiba para cargas tecnológicas frágiles.</li>
+                <li><strong>Fiable:</strong> Puntualidad matemática para cumplir con las ventanas de recepción.</li>
+            </ul>
         </div>
     </div>
+
+    <div id="modal-nosotros" class="modal-overlay" onclick="cerrarModal('nosotros')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="cerrarModal('nosotros')">&times;</button>
+            <h3>Sobre ViAngel</h3>
+            <p>Somos una empresa dedicada al transporte logístico terrestre de carga aduanera, enfocada en conectar puntos estratégicos con la máxima eficiencia operativa, puntualidad y rigurosidad que exige el comercio moderno chileno.</p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-left">
+            <p class="user-name">Cecilia Angel</p>
+            <p class="user-info">puelles.c.angel@gmail.com</p>
+            <p class="user-info">+56 9 3537 1521</p>
+        </div>
+        <div class="footer-right">
+            <div class="badge"><i class="fas fa-truck-ramp-box"></i> Servido</div>
+            <div class="badge"><i class="fas fa-shield-halved"></i> Seguro</div>
+            <div class="badge"><i class="fas fa-heart-pulse"></i> Delicado</div>
+            <div class="badge"><i class="fas fa-circle-check"></i> Fiable</div>
+        </div>
+    </footer>
 
     <script src="index.js"></script>
 </body>
 </html>
+
+
+
  
