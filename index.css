@@ -169,3 +169,26 @@ body {
 .footer-right { display: flex; gap: 15px; }
 .badge { background: white; color: #111a13; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 900; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
 .badge i { color: #2563eb; }
+
+/* Ajuste especial para pantalla de celular */
+@media (max-width: 768px) {
+  body {
+    overflow-x: hidden;
+  }
+  
+  main, section, div {
+    max-width: 100% !important;
+  }
+
+  /* Ajusta el contenedor principal para que no se salga de la pantalla */
+  .calculator-container, 
+  .card, 
+  [class*="calc"] {
+    width: 92% !important;
+    max-width: 100% !important;
+    margin: 15px auto !important;
+    position: relative !important;
+    left: 0 !important;
+    transform: none !important;
+  }
+}
