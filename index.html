@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ViAngel Logistics</title>
+    <link rel="stylesheet" href="index.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+</head>
+<body>
+
+    <div class="background-landscape"></div>
+
+    <div class="clouds-layer">
+        <div class="cloud cloud-1"></div>
+        <div class="cloud cloud-2"></div>
+    </div>
+
+    <header class="navbar">
+        <div class="logo">Vi<span>Angel</span></div>
+        <nav class="menu">
+            <a href="javascript:void(0)" onclick="abrirModal('servicios')">Servicios</a>
+            <a href="javascript:void(0)" onclick="enfocarCalculadora()">Calculadora</a>
+            <a href="javascript:void(0)" onclick="abrirModal('nosotros')">Nosotros</a>
+            <a href="javascript:void(0)" onclick="enfocarCalculadora()">Contacto</a>
+        </nav>
+        <button class="btn-cotizacion" onclick="enfocarCalculadora()">Solicitar Cotización</button>
+    </header>
+
+    <main class="main-container">
+        
+        <div class="left-panel">
+            <div class="titles-wrapper">
+                <span class="sub-heading">CALCULADORA DE LOGÍSTICA</span>
+                
+                <h1 class="hero-title">
+                    Te invitamos a
+                    <span>planificar</span>
+                    tu próximo flete
+                </h1>
+
+                <p class="hero-subtitle">
+                    Calcula el costo estimado de tu envío en segundos. Transparente, rápido y confiable.
+                </p>
+            </div>
+            <img src="furgon.png" alt="Chevrolet N400" class="van-image">
+        </div>
+
+        <div class="right-panel">
+            <div class="calculator-card" id="calc-card">
+                <h2>ViAngel Logistics Calculator</h2>
+                
+                <!-- ORIGEN DINÁMICO -->
+                <div class="form-group">
+                    <label>Origen</label>
+                    <input type="text" id="origin-input" value="Osvaldo croquevielle 2207 - terminal aduanero" disabled class="input-disabled">
+                    
+                    <div style="margin-top: 6px; display: flex; align-items: center; gap: 6px;">
+                        <input type="checkbox" id="checkOtroOrigen" onchange="toggleOtroOrigen()" style="width: 15px; height: 15px; cursor: pointer;">
+                        <label for="checkOtroOrigen" style="font-size: 11px; font-weight: 700; color: #2563eb; cursor: pointer; text-transform: none; margin: 0;">Desde otro origen</label>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Destino</label>
+                    <input type="text" id="destination" placeholder="¿A dónde enviamos?">
+                </div>
+
+                <div class="grid-inputs">
+                    <div class="form-group">
+                        <label>Carga (Kg)</label>
+                        <input type="number" id="weight" value="1" min="0" step="0.1">
+                    </div>
+                </div>
+
+                <div class="tools-container">
+                    <div class="checkbox-group">
+                        <input type="checkbox" id="tolls-check" onchange="activarCajitaPeaje()">
+                        <label for="tolls-check">Peaje ($)</label>
+                    </div>
+                    
+                    <input type="number" id="tolls-amount" value="0" min="0" disabled class="input-peaje" placeholder="Ej: 15000">
+
+                    <a href="https://planificar.copec.cl/?vehicle_type=combustion" target="_blank" class="btn-copec" title="Calcular en Copec">
+                        <i class="fas fa-route"></i> Copec
+                    </a>
+                </div>
+
+                <button class="btn-calc" onclick="calcularFleteViAngel()" id="btn-calcular">CALCULAR COSTO TOTAL</button>
+
+                <!-- OPCIÓN SERVICIO EXPRÉS (+30%) -->
+                <div class="express-container">
+                    <input type="checkbox" id="express-check" style="width: 16px; height: 16px; cursor: pointer;">
+                    <label for="express-check">⚡ Servicio Exprés / Extraordinario (+30%)</label>
+                </div>
+
+                <div class="results-box" id="results">
+                    <div class="result-row distance-row">
+                        <span>Distancia Calculada:</span>
+                        <span id="txt-distancia">0.0 Km</span>
+                    </div>
+
+                    <div class="result-row">
+                        <span>Total Neto:</span>
+                        <span id="txt-neto">$0</span>
+                    </div>
+                    <div class="result-row">
+                        <span>IVA (19%):</span>
+                        <span id="txt-iva">$0</span>
+                    </div>
+                    <div class="result-row line-break">
+                        <span>Total Peajes:</span>
+                        <span id="txt-peajes">$0</span>
+                    </div>
+                    <div class="total-row">
+                        <span>TOTAL + IVA:</span>
+                        <span id="txt-total">$0</span>
+                    </div>
+
+                    <a href="#" id="whatsapp-link" target="_blank" class="btn-whatsapp">
+                        <i class="fab fa-whatsapp"></i> CONTACTAR POR WHATSAPP
+                    </a>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <div id="modal-servicios" class="modal-overlay" onclick="cerrarModal('servicios')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="cerrarModal('servicios')">&times;</button>
+            <h3>Nuestros Servicios Especializados</h3>
+            <ul class="services-list">
+                <li><strong>Servido:</strong> Control y retiro rápido en aduanas y terminales de carga.</li>
+                <li><strong>Seguro:</strong> Monitoreo constante del estado y resguardo de sus mercancías.</li>
+                <li><strong>Delicado:</strong> Manipulación y estiba para cargas tecnológicas frágiles.</li>
+                <li><strong>Fiable:</strong> Puntualidad matemática para cumplir con las ventanas de recepción.</li>
+            </ul>
+        </div>
+    </div>
+
+    <div id="modal-nosotros" class="modal-overlay" onclick="cerrarModal('nosotros')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="cerrarModal('nosotros')">&times;</button>
+            <h3>Sobre ViAngel</h3>
+            <p>Somos una empresa dedicada al transporte logístico terrestre de carga aduanera, enfocada en conectar puntos estratégicos con la máxima eficiencia operativa, puntualidad y rigurosidad que exige el comercio moderno chileno.</p>
+        </div>
+    </div>
+
+    <footer class="footer">
+        <div class="footer-left">
+            <p class="user-name">Cecilia Angel</p>
+            <p class="user-info">puelles.c.angel@gmail.com</p>
+            <p class="user-info">+56 9 3537 1521</p>
+        </div>
+        <div class="footer-right">
+            <div class="badge"><i class="fas fa-truck-ramp-box"></i> Servido</div>
+            <div class="badge"><i class="fas fa-shield-halved"></i> Seguro</div>
+            <div class="badge"><i class="fas fa-heart-pulse"></i> Delicado</div>
+            <div class="badge"><i class="fas fa-circle-check"></i> Fiable</div>
+        </div>
+    </footer>
+
+    <script src="index.js"></script>
+</body>
+</html>
