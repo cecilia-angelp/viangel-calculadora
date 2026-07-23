@@ -170,25 +170,87 @@ body {
 .badge { background: white; color: #111a13; padding: 12px 20px; border-radius: 10px; font-size: 14px; font-weight: 900; display: flex; align-items: center; gap: 8px; box-shadow: 0 4px 10px rgba(0,0,0,0.3); }
 .badge i { color: #2563eb; }
 
-/* Ajuste especial para pantalla de celular */
-@media (max-width: 768px) {
-  body {
-    overflow-x: hidden;
-  }
-  
-  main, section, div {
-    max-width: 100% !important;
-  }
 
-  /* Ajusta el contenedor principal para que no se salga de la pantalla */
-  .calculator-container, 
-  .card, 
-  [class*="calc"] {
-    width: 92% !important;
-    max-width: 100% !important;
-    margin: 15px auto !important;
-    position: relative !important;
-    left: 0 !important;
-    transform: none !important;
-  }
+/* ==========================================================
+   PARCHE RESPONSIVO PARA CELULARES (AGREGADO AL FINAL)
+   ========================================================== */
+@media (max-width: 900px) {
+    /* Permite que la página se expanda bien verticalmente en celular */
+    body {
+        width: 100% !important;
+        height: auto !important;
+        overflow-x: hidden !important;
+    }
+
+    /* Apila el menú de navegación para que no se amontone */
+    .navbar {
+        margin: 15px 15px 0 !important;
+        padding: 10px 15px !important;
+        flex-direction: column !important;
+        gap: 10px !important;
+        text-align: center !important;
+    }
+    .menu {
+        gap: 15px !important;
+        flex-wrap: wrap !important;
+        justify-content: center !important;
+    }
+
+    /* Convierte el contenedor principal en una sola columna vertical */
+    .main-container {
+        flex-direction: column !important;
+        padding: 20px 15px !important;
+        width: 100% !important;
+        gap: 30px !important;
+    }
+
+    /* El panel izquierdo (títulos y furgoneta) se adapta al ancho */
+    .left-panel {
+        width: 100% !important;
+        align-items: center !important;
+        text-align: center !important;
+    }
+
+    .hero-title {
+        font-size: 2.8rem !important;
+        letter-spacing: -1px !important;
+    }
+
+    .hero-subtitle {
+        font-size: 1rem !important;
+        padding: 0 10px !important;
+    }
+
+    .van-image {
+        max-width: 280px !important;
+        margin: 0 auto !important;
+    }
+
+    /* Centra y deja perfecta la tarjeta de la calculadora */
+    .right-panel {
+        width: 100% !important;
+        justify-content: center !important;
+        display: flex !important;
+    }
+
+    .calculator-card {
+        width: 100% !important;
+        max-width: 420px !important;
+        margin: 0 auto !important;
+        padding: 20px !important;
+        box-shadow: 0 15px 35px rgba(0,0,0,0.3) !important;
+    }
+
+    /* Footer adaptado para celulares */
+    .footer {
+        flex-direction: column !important;
+        padding: 25px 20px !important;
+        text-align: center !important;
+        gap: 20px !important;
+    }
+
+    .footer-right {
+        flex-direction: column !important;
+        width: 100% !important;
+    }
 }
