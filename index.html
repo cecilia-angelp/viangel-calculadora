@@ -89,13 +89,30 @@
                     </a>
                 </div>
 
-                <button class="btn-calc" onclick="calcularFleteViAngel()" id="btn-calcular">CALCULAR COSTO TOTAL</button>
+                <!-- SELECCIÓN DE MODALIDAD CON TOOLTIPS INFORMATIVOS -->
+                <div class="form-group" style="margin-top: 15px;">
+                    <label style="font-weight: 700; color: #1e293b; margin-bottom: 8px; display: block;">Modalidad de Servicio:</label>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        
+                        <label title="Viaje programado con 1 conductor. Cumple los tiempos de tránsito normal con pausas reglamentarias." style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: #334155;">
+                            <input type="radio" name="tipoServicio" value="0" checked style="width: 16px; height: 16px; cursor: pointer;">
+                            📦 Estándar (Tránsito Normal)
+                        </label>
 
-                <!-- OPCIÓN SERVICIO EXPRÉS (+30%) -->
-                <div class="express-container">
-                    <input type="checkbox" id="express-check" style="width: 16px; height: 16px; cursor: pointer;">
-                    <label for="express-check">⚡ Servicio Exprés / Extraordinario (+30%)</label>
+                        <label title="Despacho prioritario de salida inmediata o en horario especial/nocturno con 1 conductor." style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: #d97706;">
+                            <input type="radio" name="tipoServicio" value="0.30" style="width: 16px; height: 16px; cursor: pointer;">
+                            ⚡ Extraordinaria (+30%)
+                        </label>
+
+                        <label title="Ruta continua de larga distancia con 2 conductores en relevo. El vehículo no se detiene para entregas de máxima urgencia interregional." style="display: flex; align-items: center; gap: 8px; cursor: pointer; font-size: 13px; font-weight: 600; color: #dc2626;">
+                            <input type="radio" name="tipoServicio" value="0.60" style="width: 16px; height: 16px; cursor: pointer;">
+                            🚀 Non-Stop 24/7 (Doble Chofer) (+60%)
+                        </label>
+
+                    </div>
                 </div>
+
+                <button class="btn-calc" onclick="calcularFleteViAngel()" id="btn-calcular">CALCULAR COSTO TOTAL</button>
 
                 <div class="results-box" id="results">
                     <div class="result-row distance-row">
