@@ -253,7 +253,22 @@ body {
     flex-direction: column !important;
     width: 100% !important;
 }
+/* COMPORTAMIENTO PARA COMPUTADOR */
+.dropdown-mega {
+    position: relative;
+}
 
+.dropdown-mega .mega-content {
+    display: none;
+    position: absolute;
+    top: 100%;
+    left: 0;
+    z-index: 1000;
+}
+
+.dropdown-mega:hover .mega-content {
+    display: block;
+}
 /* AJUSTE PARA PANTALLAS DE CELULARES */
 @media (max-width: 768px) {
     .dropdown-mega .mega-content {
