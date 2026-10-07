@@ -23,9 +23,11 @@
         <div class="logo">Vi<span>Angel</span></div>
 
         <nav class="menu">
-            <!-- MENÚ DESPLEGABLE: SERVICIOS -->
+            <!-- SERVICIOS -->
             <div class="dropdown-mega">
-                <a href="javascript:void(0)" onclick="abrirModal('servicios')">Servicios <i class="fas fa-chevron-down" style="font-size: 9px;"></i></a>
+                <a href="javascript:void(0)" onclick="abrirModal('servicios')">
+                    Servicios <i class="fas fa-chevron-down flecha-icono"></i>
+                </a>
                 <div class="mega-content">
                     <div class="mega-grid">
                         <div class="mega-col" onclick="abrirModal('servicios')">
@@ -48,9 +50,11 @@
                 </div>
             </div>
 
-            <!-- MENÚ DESPLEGABLE: CALCULADORA -->
+            <!-- CALCULADORA -->
             <div class="dropdown-mega">
-                <a href="javascript:void(0)" onclick="enfocarCalculadora()">Calculadora <i class="fas fa-chevron-down" style="font-size: 9px;"></i></a>
+                <a href="javascript:void(0)" onclick="manejarClickCalculadora()">
+                    Calculadora <i class="fas fa-chevron-down flecha-icono"></i>
+                </a>
                 <div class="mega-content" style="min-width: 320px;">
                     <div class="mega-grid" style="grid-template-columns: 1fr;">
                         <div class="mega-col" onclick="enfocarCalculadora()">
@@ -61,9 +65,11 @@
                 </div>
             </div>
 
-            <!-- MENÚ DESPLEGABLE: NOSOTROS -->
+            <!-- NOSOTROS -->
             <div class="dropdown-mega">
-                <a href="javascript:void(0)" onclick="abrirModal('nosotros')">Nosotros <i class="fas fa-chevron-down" style="font-size: 9px;"></i></a>
+                <a href="javascript:void(0)" onclick="abrirModal('nosotros')">
+                    Nosotros <i class="fas fa-chevron-down flecha-icono"></i>
+                </a>
                 <div class="mega-content" style="min-width: 300px;">
                     <div class="mega-grid" style="grid-template-columns: 1fr;">
                         <div class="mega-col" onclick="abrirModal('nosotros')">
@@ -74,12 +80,14 @@
                 </div>
             </div>
 
-            <!-- MENÚ DESPLEGABLE: CONTACTO -->
+            <!-- CONTACTO -->
             <div class="dropdown-mega">
-                <a href="#contacto">Contacto <i class="fas fa-chevron-down" style="font-size: 9px;"></i></a>
+                <a href="javascript:void(0)" onclick="manejarClickContacto()">
+                    Contacto <i class="fas fa-chevron-down flecha-icono"></i>
+                </a>
                 <div class="mega-content" style="min-width: 320px;">
                     <div class="mega-grid" style="grid-template-columns: 1fr;">
-                        <div class="mega-col" onclick="window.location.href='#contacto'">
+                        <div class="mega-col" onclick="irAContacto()">
                             <h4><i class="fas fa-headset"></i> Asesoría Personalizada</h4>
                             <p>Contáctanos para brindarte una mejor asesoría sobre tiempos de entrega, fechas, peso, medidas y disposición del transporte.</p>
                         </div>
@@ -114,7 +122,6 @@
             <div class="calculator-card" id="calc-card">
                 <h2>Calculadora Logística ViAngel</h2>
                 
-                <!-- ORIGEN DINÁMICO -->
                 <div class="form-group">
                     <label>Origen</label>
                     <input type="text" id="origin-input" value="Osvaldo croquevielle 2207 - terminal aduanero" disabled class="input-disabled">
@@ -143,25 +150,23 @@
                         <label for="tolls-check">Peaje ($)</label>
                     </div>
                     
-                    <!-- LÍMITE DE PEAJE AGREGADO EN HTML (MÁXIMO 150.000) -->
-                    <input type="number" id="tolls-amount" value="0" min="0" max="150000" disabled class="input-peaje" placeholder="Ej: 15000" oninput="if(this.value > 150000) this.value = 150000;">
+                    <input type="number" id="tolls-amount" value="0" min="0" max="150000" disabled class="input-peaje" placeholder="Ej: 15000" oninput="if(Number(this.value) > 150000) this.value = 150000;">
 
                     <a href="https://planificar.copec.cl/?vehicle_type=combustion" target="_blank" class="btn-copec" title="Calcular en Copec">
                         <i class="fas fa-route"></i> Copec
                     </a>
                 </div>
 
-                <!-- SERVICIOS ESPECIALES OPCIONALES -->
                 <div style="margin-top: 12px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 8px;">
                     
-                    <div style="display: flex; align-items: center; gap: 6px;" title="Despacho prioritario de salida inmediata o en horario especial/nocturno con 1 conductor.">
+                    <div style="display: flex; align-items: center; gap: 6px;">
                         <input type="checkbox" id="extraordinario-check" onchange="validarServiciosEspeciales(this)" style="width: 15px; height: 15px; cursor: pointer;">
                         <label for="extraordinario-check" style="font-size: 11px; font-weight: 700; color: #2563eb; cursor: pointer; text-transform: none; margin: 0;">
                             Servicio Extraordinario (+30%)
                         </label>
                     </div>
 
-                    <div style="display: flex; align-items: center; gap: 6px;" title="Ruta continua de larga distancia con 2 conductores en relevo.">
+                    <div style="display: flex; align-items: center; gap: 6px;">
                         <input type="checkbox" id="continuo-check" onchange="validarServiciosEspeciales(this)" style="width: 15px; height: 15px; cursor: pointer;">
                         <label for="continuo-check" style="font-size: 11px; font-weight: 700; color: #2563eb; cursor: pointer; text-transform: none; margin: 0;">
                             Servicio Continuo 24/7 (Doble Chofer) (+60%)
@@ -203,15 +208,16 @@
         </div>
     </main>
 
+    <!-- VENTANAS MODALES -->
     <div id="modal-servicios" class="modal-overlay" onclick="cerrarModal('servicios')">
         <div class="modal-content" onclick="event.stopPropagation()">
             <button class="modal-close" onclick="cerrarModal('servicios')">&times;</button>
             <h3>Nuestros Servicios Especializados</h3>
             <ul class="services-list">
-                <li><strong>Servicio:</strong> Control y retiro rápido en aduanas y terminales de carga.</li>
-                <li><strong>Seguro:</strong> Monitoreo constante del estado y resguardo de sus mercancías.</li>
-                <li><strong>Delicado:</strong> Manipulación y cuidado delicado de cargas tecnológicas y frágiles.</li>
-                <li><strong>Fiable:</strong> Puntualidad matemática para cumplir con las ventanas de recepción.</li>
+                <li><strong>Servicio Aduanero:</strong> Control y retiro rápido en aduanas y terminales de carga.</li>
+                <li><strong>Carga Segura:</strong> Monitoreo constante del estado y resguardo de sus mercancías.</li>
+                <li><strong>Cuidado Frágil:</strong> Manipulación y cuidado delicado de cargas tecnológicas y frágiles.</li>
+                <li><strong>Fletes Expresos:</strong> Puntualidad matemática para cumplir con las ventanas de recepción.</li>
             </ul>
         </div>
     </div>
@@ -221,6 +227,24 @@
             <button class="modal-close" onclick="cerrarModal('nosotros')">&times;</button>
             <h3>Sobre ViAngel</h3>
             <p>Somos una empresa dedicada al transporte logístico terrestre de carga aduanera, enfocada en conectar puntos estratégicos con la máxima eficiencia operativa, puntualidad y rigurosidad que exige el comercio moderno chileno.</p>
+        </div>
+    </div>
+
+    <div id="modal-calculadora" class="modal-overlay" onclick="cerrarModal('calculadora')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="cerrarModal('calculadora')">&times;</button>
+            <h3>Calculadora Logística</h3>
+            <p>Nuestra calculadora te proporcionará un aproximado de tu próximo flete calculando distancias exactas, peajes y servicios adicionales con tarifas transparentes.</p>
+            <button class="btn-calc" style="margin-top: 15px;" onclick="cerrarModal('calculadora'); enfocarCalculadora();">Ir a Calcular</button>
+        </div>
+    </div>
+
+    <div id="modal-contacto" class="modal-overlay" onclick="cerrarModal('contacto')">
+        <div class="modal-content" onclick="event.stopPropagation()">
+            <button class="modal-close" onclick="cerrarModal('contacto')">&times;</button>
+            <h3>Asesoría Personalizada</h3>
+            <p>Contáctanos para brindarte una mejor asesoría sobre tiempos de entrega, fechas, peso, medidas y disposición de transporte para tu carga.</p>
+            <button class="btn-calc" style="margin-top: 15px;" onclick="cerrarModal('contacto'); irAContacto();">Ver Medios de Contacto</button>
         </div>
     </div>
 
@@ -234,12 +258,13 @@
 
             <p class="user-info">
                 <a href="tel:+56935371521" style="color: #d1d5db; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
-                    <i class="fas fa-phone" style="color: #38bdf8;"></i> Llamanos
+                    <i class="fas fa-phone" style="color: #38bdf8;"></i> Llama hoy mismo
                 </a>
             </p>
         </div>
         <div class="footer-right">
-           <!-- <div class="badge"><i class="fas fa-truck-ramp-box"></i> Servido</div> -->
+            <div class="badge"><i class="fas fa-file-invoice-dollar"></i> Factura Electrónica</div>
+            <!--<div class="badge"><i class="fas fa-truck-ramp-box"></i> Servido</div>-->
             <div class="badge"><i class="fas fa-shield-halved"></i> Seguro</div>
             <div class="badge"><i class="fas fa-heart-pulse"></i> Delicado</div>
             <div class="badge"><i class="fas fa-circle-check"></i> Fiable</div>
