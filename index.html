@@ -23,12 +23,54 @@
 
     <header class="navbar">
         <div class="logo">Vi<span>Angel</span></div>
-        <nav class="menu">
-            <a href="javascript:void(0)" onclick="abrirModal('servicios')">Servicios</a>
+
+      <nav class="menu">
+            <!-- MENÚ DESPLEGABLE: SERVICIOS -->
+            <div class="dropdown-mega">
+                <a href="javascript:void(0)" onclick="abrirModal('servicios')">Servicios <i class="fas fa-chevron-down" style="font-size: 9px;"></i></a>
+                <div class="mega-content">
+                    <div class="mega-grid">
+                        <div class="mega-col" onclick="abrirModal('servicios')">
+                            <h4><i class="fas fa-truck-ramp-box"></i> Servido Aduanero</h4>
+                            <p>Control y retiro rápido en aduanas y terminales de carga terrestre.</p>
+                        </div>
+                        <div class="mega-col" onclick="abrirModal('servicios')">
+                            <h4><i class="fas fa-shield-halved"></i> Carga Segura</h4>
+                            <p>Monitoreo constante del estado y resguardo de sus mercancías en ruta.</p>
+                        </div>
+                        <div class="mega-col" onclick="abrirModal('servicios')">
+                            <h4><i class="fas fa-box-open"></i> Manipulación Delicada</h4>
+                            <p>Estiba experta para cargas tecnológicas y frágiles con máximo cuidado.</p>
+                        </div>
+                        <div class="mega-col" onclick="abrirModal('servicios')">
+                            <h4><i class="fas fa-clock"></i> Fletes Expresos</h4>
+                            <p>Puntualidad matemática para cumplir con las ventanas de recepción.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ENLACE DIRECTO: CALCULADORA -->
             <a href="javascript:void(0)" onclick="enfocarCalculadora()">Calculadora</a>
-            <a href="javascript:void(0)" onclick="abrirModal('nosotros')">Nosotros</a>
+
+            <!-- MENÚ DESPLEGABLE: NOSOTROS -->
+            <div class="dropdown-mega">
+                <a href="javascript:void(0)" onclick="abrirModal('nosotros')">Nosotros <i class="fas fa-chevron-down" style="font-size: 9px;"></i></a>
+                <div class="mega-content" style="min-width: 300px;">
+                    <div class="mega-grid" style="grid-template-columns: 1fr;">
+                        <div class="mega-col" onclick="abrirModal('nosotros')">
+                            <h4><i class="fas fa-building"></i> ViAngel Logistics</h4>
+                            <p>Empresa dedicada al transporte logístico terrestre de carga, conectando puntos estratégicos de Chile con eficiencia y puntualidad.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ENLACE DIRECTO: CONTACTO -->
             <a href="javascript:void(0)" onclick="enfocarCalculadora()">Contacto</a>
         </nav>
+
+
         <button class="btn-cotizacion" onclick="enfocarCalculadora()">Solicitar Cotización</button>
     </header>
 
@@ -166,12 +208,12 @@
 
     <footer class="footer">
         <div class="footer-left">
-            <p class="user-name">Cecilia Angel</p>
+           <p class="user-name">Cecilia Angel</p>
             <p class="user-info">puelles.c.angel@gmail.com</p>
-            <p class="user-info">+56 9 3537 1521</p>
+            <p class="user-info"></p>
         </div>
         <div class="footer-right">
-            <div class="badge"><i class="fas fa-truck-ramp-box"></i> Servido</div>
+            <!--<div class="badge"><i class="fas fa-truck-ramp-box"></i> Servido</div>-->
             <div class="badge"><i class="fas fa-shield-halved"></i> Seguro</div>
             <div class="badge"><i class="fas fa-heart-pulse"></i> Delicado</div>
             <div class="badge"><i class="fas fa-circle-check"></i> Fiable</div>
