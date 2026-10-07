@@ -2,13 +2,13 @@ ViAngel Logistics - Calculadora de Fletes
 
 Plataforma web para cotizar transporte logístico terrestre en Chile de forma rápida, automática y transparente.
 
-- ¿Qué hace esta plataforma?
+¿Qué hace esta plataforma?
   
 * Calcula distancias y costos: Usa mapas reales para dar el valor exacto del flete según kilómetros, peso y peajes.
 * Servicios a medida: Incluye opciones de viaje continuo (doble chofer) o extraordinario.
 * Contacto Directo: Envía la cotización detallada directamente a nuestro WhatsApp de atención.
 
-- Tecnologías
+Tecnologías
 * Creado con HTML5, CSS3 y JavaScript.
 * Conectado a servidores de mapas abiertos (Nominatim y OSRM).
 
