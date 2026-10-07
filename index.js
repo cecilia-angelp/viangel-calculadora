@@ -1,49 +1,75 @@
-// ==========================================
-// 1. BLOQUEO DE SEGURIDAD POR CLAVE (COMENTADO)
-// ==========================================
-// (function verificarAcceso() {
-//     const CLAVE_CORRECTA = "fletesmi";
-//     let intensionClave = prompt("🔒 Acceso Restringido - ViAngel\nIngrese la contraseña para continuar:");
-// 
-//     if (intensionClave !== CLAVE_CORRECTA) {
-//         alert("❌ Contraseña incorrecta. Acceso denegado.");
-//         document.body.innerHTML = `
-//             <div style="display:flex; justify-content:center; align-items:center; height:100vh; background:#081729; color:white; font-family:sans-serif; text-align:center;">
-//                 <div>
-//                     <h1 style="font-size:3rem; margin-bottom:10px;">🔒 Acceso Restringido</h1>
-//                     <p style="color:#94a3b8; font-size:1.2rem;">Debes ingresar la contraseña correcta para ver la calculadora.</p>
-//                 </div>
-//             </div>
-//         `;
-//         throw new Error("Acceso no autorizado.");
-//     }
-// })();
+// CONTROL VISUAL DE MENÚS EN COMPUTADOR
+function mostrarMenu(id) {
+    if (window.innerWidth > 768) {
+        const elemento = document.getElementById(id);
+        if (elemento) elemento.style.display = 'block';
+    }
+}
 
-// MODALES Y FOCO
-function abrirModal(tipo) { document.getElementById('modal-' + tipo).style.display = 'flex'; }
-function cerrarModal(tipo) { document.getElementById('modal-' + tipo).style.display = 'none'; }
+function ocultarMenu(id) {
+    if (window.innerWidth > 768) {
+        const elemento = document.getElementById(id);
+        if (elemento) elemento.style.display = 'none';
+    }
+}
+
+// MODALES Y NAVEGACIÓN
+function abrirModal(tipo) {
+    const modal = document.getElementById('modal-' + tipo);
+    if (modal) modal.style.display = 'flex';
+}
+
+function cerrarModal(tipo) {
+    const modal = document.getElementById('modal-' + tipo);
+    if (modal) modal.style.display = 'none';
+}
 
 window.onclick = function(event) {
-    if (event.target === document.getElementById('modal-servicios')) cerrarModal('servicios');
-    if (event.target === document.getElementById('modal-nosotros')) cerrarModal('nosotros');
+    if (event.target.classList.contains('modal-overlay')) {
+        event.target.style.display = 'none';
+    }
 }
 
 function enfocarCalculadora() {
     const card = document.getElementById('calc-card');
+    card.scrollIntoView({ behavior: 'smooth', block: 'center' });
     card.classList.add('calculator-focus');
     setTimeout(() => card.classList.remove('calculator-focus'), 1200);
+}
+
+function irAContacto() {
+    const footer = document.getElementById('contacto');
+    footer.scrollIntoView({ behavior: 'smooth' });
+}
+
+// COMPORTAMIENTO MÓVIL VS COMPUTADOR
+function manejarClickCalculadora() {
+    if (window.innerWidth <= 768) {
+        abrirModal('calculadora');
+    } else {
+        enfocarCalculadora();
+    }
+}
+
+function manejarClickContacto() {
+    if (window.innerWidth <= 768) {
+        abrirModal('contacto');
+    } else {
+        irAContacto();
+    }
 }
 
 function activarCajitaPeaje() {
     const isChecked = document.getElementById('tolls-check').checked;
     const inputPeaje = document.getElementById('tolls-amount');
     inputPeaje.disabled = !isChecked; 
-    if (!isChecked) { inputPeaje.value = 0; } else { inputPeaje.focus(); }
+    if (!isChecked) { 
+        inputPeaje.value = 0; 
+    } else { 
+        inputPeaje.focus(); 
+    }
 }
 
-// ==========================================
-// FUNCIÓN CAMBIAR ORIGEN
-// ==========================================
 function toggleOtroOrigen() {
     const check = document.getElementById('checkOtroOrigen');
     const inputOrigen = document.getElementById('origin-input');
@@ -61,7 +87,6 @@ function toggleOtroOrigen() {
     }
 }
 
-// CONTROL DE MUTUA EXCLUSIÓN ENTRE SERVICIOS ESPECIALES
 function validarServiciosEspeciales(checkboxActual) {
     const checkExtra = document.getElementById('extraordinario-check');
     const checkContinuo = document.getElementById('continuo-check');
@@ -73,7 +98,6 @@ function validarServiciosEspeciales(checkboxActual) {
     }
 }
 
-// ANIMACIÓN DE NÚMEROS
 function animarNumero(idElemento, valorFinal, esDinero = true) {
     const elemento = document.getElementById(idElemento);
     let valorActual = 0;
@@ -88,7 +112,7 @@ function animarNumero(idElemento, valorFinal, esDinero = true) {
             clearInterval(timer);
         }
         
-        if(esDinero) {
+        if (esDinero) {
             elemento.innerText = '$' + Math.round(valorActual).toLocaleString('es-CL');
         } else {
             elemento.innerText = valorActual.toFixed(1) + ' Km';
@@ -96,9 +120,7 @@ function animarNumero(idElemento, valorFinal, esDinero = true) {
     }, intervalos);
 }
 
-// ==========================================
-// MOTOR MATEMÁTICO REAL + GEOLOCALIZACIÓN
-// ==========================================
+// CÁLCULO DE COSTOS CON MAPAS
 async function calcularFleteViAngel() {
     const btnCalc = document.getElementById('btn-calcular');
     const originInput = document.getElementById('origin-input').value;
@@ -181,7 +203,6 @@ async function calcularFleteViAngel() {
         let totalNeto = costoBaseTotal * (1 + porcentajeRecargo);
         const iva = totalNeto * 0.19;
         
-        // TOPE MÁXIMO DE PEAJE: 150.000
         let valorPeaje = parseFloat(tollsInput) || 0;
         if (valorPeaje > 150000) valorPeaje = 150000;
         const peajes = isTollsChecked ? valorPeaje : 0; 
@@ -203,9 +224,7 @@ async function calcularFleteViAngel() {
     }
 }
 
-// ==========================================
-// FUNCIÓN DIRECTA WHATSAPP (CON VALIDACIÓN ANTI-BUG)
-// ==========================================
+// ENVÍO A WHATSAPP
 function enviarCotizacionWhatsApp() {
     const originInput = document.getElementById('origin-input').value;
     const destinationInput = document.getElementById('destination').value;
@@ -221,9 +240,8 @@ function enviarCotizacionWhatsApp() {
         kilometrosReales = parseFloat(txtDist) || 0;
     } catch(e) {}
 
-    // VALIDACIÓN ESTRELLA: Si no hay kilómetros calculados, no abre WhatsApp.
     if (kilometrosReales === 0 || !destinationInput.trim()) {
-        alert("¡Alto ahí! Por favor presiona el botón 'CALCULAR COSTO TOTAL' antes de solicitar la cotización por WhatsApp.");
+        alert("Por favor presiona el botón 'CALCULAR COSTO TOTAL' antes de solicitar la cotización por WhatsApp.");
         return; 
     }
 
@@ -245,13 +263,11 @@ function enviarCotizacionWhatsApp() {
     let totalNeto = costoBaseTotal * (1 + porcentajeRecargo);
     const iva = totalNeto * 0.19;
     
-    // TOPE MÁXIMO DE PEAJE: 150.000
     let valorPeaje = parseFloat(tollsInput) || 0;
     if (valorPeaje > 150000) valorPeaje = 150000;
     const peajes = isTollsChecked ? valorPeaje : 0; 
     
     const totalMasIva = totalNeto + iva + peajes;
-
     const clp = (val) => '$' + Math.round(val).toLocaleString('es-CL');
 
     const textoMensaje = "Hola ViAngel Logistics,\n\n" +
