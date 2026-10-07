@@ -1,5 +1,3 @@
-
-
 <!DOCTYPE html>
 <html lang="es">
 <head>
@@ -24,7 +22,7 @@
     <header class="navbar">
         <div class="logo">Vi<span>Angel</span></div>
 
-      <nav class="menu">
+        <nav class="menu">
             <!-- MENÚ DESPLEGABLE: SERVICIOS -->
             <div class="dropdown-mega">
                 <a href="javascript:void(0)" onclick="abrirModal('servicios')">Servicios <i class="fas fa-chevron-down" style="font-size: 9px;"></i></a>
@@ -32,15 +30,15 @@
                     <div class="mega-grid">
                         <div class="mega-col" onclick="abrirModal('servicios')">
                             <h4><i class="fas fa-truck-ramp-box"></i> Servido Aduanero</h4>
-                            <p>Control y retiro rápido en aduanas y terminales de carga terrestre.</p>
+                            <p>Control y retiro en aduanas y terminales de carga terrestre de forma rápida.</p>
                         </div>
                         <div class="mega-col" onclick="abrirModal('servicios')">
                             <h4><i class="fas fa-shield-halved"></i> Carga Segura</h4>
                             <p>Monitoreo constante del estado y resguardo de sus mercancías en ruta.</p>
                         </div>
                         <div class="mega-col" onclick="abrirModal('servicios')">
-                            <h4><i class="fas fa-box-open"></i> Manipulación Delicada</h4>
-                            <p>Estiba experta para cargas tecnológicas y frágiles con máximo cuidado.</p>
+                            <h4><i class="fas fa-box-open"></i> Cuidado Frágil</h4>
+                            <p>Cuidamos y acomodamos tus cosas frágiles y tecnológicas como si fueran nuestras.</p>
                         </div>
                         <div class="mega-col" onclick="abrirModal('servicios')">
                             <h4><i class="fas fa-clock"></i> Fletes Expresos</h4>
@@ -50,8 +48,18 @@
                 </div>
             </div>
 
-            <!-- ENLACE DIRECTO: CALCULADORA -->
-            <a href="javascript:void(0)" onclick="enfocarCalculadora()">Calculadora</a>
+            <!-- MENÚ DESPLEGABLE: CALCULADORA -->
+            <div class="dropdown-mega">
+                <a href="javascript:void(0)" onclick="enfocarCalculadora()">Calculadora <i class="fas fa-chevron-down" style="font-size: 9px;"></i></a>
+                <div class="mega-content" style="min-width: 320px;">
+                    <div class="mega-grid" style="grid-template-columns: 1fr;">
+                        <div class="mega-col" onclick="enfocarCalculadora()">
+                            <h4><i class="fas fa-calculator"></i> Cotiza al instante</h4>
+                            <p>Nuestra calculadora te proporcionará un aproximado de tu próximo flete calculando distancias, peajes y servicios adicionales.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
 
             <!-- MENÚ DESPLEGABLE: NOSOTROS -->
             <div class="dropdown-mega">
@@ -66,10 +74,19 @@
                 </div>
             </div>
 
-            <!-- ENLACE DIRECTO: CONTACTO -->
-            <a href="javascript:void(0)" onclick="enfocarCalculadora()">Contacto</a>
+            <!-- MENÚ DESPLEGABLE: CONTACTO -->
+            <div class="dropdown-mega">
+                <a href="#contacto">Contacto <i class="fas fa-chevron-down" style="font-size: 9px;"></i></a>
+                <div class="mega-content" style="min-width: 320px;">
+                    <div class="mega-grid" style="grid-template-columns: 1fr;">
+                        <div class="mega-col" onclick="window.location.href='#contacto'">
+                            <h4><i class="fas fa-headset"></i> Asesoría Personalizada</h4>
+                            <p>Contáctanos para brindarte una mejor asesoría sobre tiempos de entrega, fechas, peso, medidas y disposición del transporte.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
         </nav>
-
 
         <button class="btn-cotizacion" onclick="enfocarCalculadora()">Solicitar Cotización</button>
     </header>
@@ -95,7 +112,7 @@
 
         <div class="right-panel">
             <div class="calculator-card" id="calc-card">
-                <h2>ViAngel Logistics Calculator</h2>
+                <h2>Calculadora Logística ViAngel</h2>
                 
                 <!-- ORIGEN DINÁMICO -->
                 <div class="form-group">
@@ -126,14 +143,15 @@
                         <label for="tolls-check">Peaje ($)</label>
                     </div>
                     
-                    <input type="number" id="tolls-amount" value="0" min="0" disabled class="input-peaje" placeholder="Ej: 15000">
+                    <!-- LÍMITE DE PEAJE AGREGADO EN HTML (MÁXIMO 150.000) -->
+                    <input type="number" id="tolls-amount" value="0" min="0" max="150000" disabled class="input-peaje" placeholder="Ej: 15000" oninput="if(this.value > 150000) this.value = 150000;">
 
                     <a href="https://planificar.copec.cl/?vehicle_type=combustion" target="_blank" class="btn-copec" title="Calcular en Copec">
                         <i class="fas fa-route"></i> Copec
                     </a>
                 </div>
 
-                <!-- SERVICIOS ESPECIALES OPCIONALES CON ESTILO AZUL SUTIL Y TOOLTIPS -->
+                <!-- SERVICIOS ESPECIALES OPCIONALES -->
                 <div style="margin-top: 12px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 8px;">
                     
                     <div style="display: flex; align-items: center; gap: 6px;" title="Despacho prioritario de salida inmediata o en horario especial/nocturno con 1 conductor.">
@@ -143,10 +161,10 @@
                         </label>
                     </div>
 
-                    <div style="display: flex; align-items: center; gap: 6px;" title="Ruta continua de larga distancia con 2 conductores en relevo. El vehículo no se detiene para entregas de máxima urgencia interregional.">
-                        <input type="checkbox" id="nonstop-check" onchange="validarServiciosEspeciales(this)" style="width: 15px; height: 15px; cursor: pointer;">
-                        <label for="nonstop-check" style="font-size: 11px; font-weight: 700; color: #2563eb; cursor: pointer; text-transform: none; margin: 0;">
-                            Servicio Non-Stop 24/7 (Doble Chofer) (+60%)
+                    <div style="display: flex; align-items: center; gap: 6px;" title="Ruta continua de larga distancia con 2 conductores en relevo.">
+                        <input type="checkbox" id="continuo-check" onchange="validarServiciosEspeciales(this)" style="width: 15px; height: 15px; cursor: pointer;">
+                        <label for="continuo-check" style="font-size: 11px; font-weight: 700; color: #2563eb; cursor: pointer; text-transform: none; margin: 0;">
+                            Servicio Continuo 24/7 (Doble Chofer) (+60%)
                         </label>
                     </div>
 
@@ -177,7 +195,7 @@
                         <span id="txt-total">$0</span>
                     </div>
 
-                    <a href="#" id="whatsapp-link" target="_blank" class="btn-whatsapp">
+                    <a class="btn-whatsapp" onclick="enviarCotizacionWhatsApp()" style="cursor: pointer;">
                         <i class="fab fa-whatsapp"></i> CONTACTAR POR WHATSAPP
                     </a>
                 </div>
@@ -190,9 +208,9 @@
             <button class="modal-close" onclick="cerrarModal('servicios')">&times;</button>
             <h3>Nuestros Servicios Especializados</h3>
             <ul class="services-list">
-                <li><strong>Servido:</strong> Control y retiro rápido en aduanas y terminales de carga.</li>
+                <li><strong>Servicio:</strong> Control y retiro rápido en aduanas y terminales de carga.</li>
                 <li><strong>Seguro:</strong> Monitoreo constante del estado y resguardo de sus mercancías.</li>
-                <li><strong>Delicado:</strong> Manipulación y estiba para cargas tecnológicas frágiles.</li>
+                <li><strong>Delicado:</strong> Manipulación y cuidado delicado de cargas tecnológicas y frágiles.</li>
                 <li><strong>Fiable:</strong> Puntualidad matemática para cumplir con las ventanas de recepción.</li>
             </ul>
         </div>
@@ -206,24 +224,27 @@
         </div>
     </div>
 
-    <footer class="footer">
+    <footer class="footer" id="contacto">
         <div class="footer-left">
-           <p class="user-name">Cecilia Angel</p>
-            <p class="user-info">puelles.c.angel@gmail.com</p>
-            <p class="user-info"></p>
+            <p class="user-info">
+                <a href="mailto:puelles.c.angel@gmail.com?subject=Solicitud%20de%20Cotización%20ViAngel&body=Hola%20ViAngel,%20me%20gustaría%20solicitar%20una%20cotización%20para%20un%20flete." style="color: #d1d5db; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-envelope" style="color: #38bdf8;"></i> Enviar Correo de Cotización
+                </a>
+            </p>
+
+            <p class="user-info">
+                <a href="tel:+56935371521" style="color: #d1d5db; text-decoration: none; display: inline-flex; align-items: center; gap: 8px;">
+                    <i class="fas fa-phone" style="color: #38bdf8;"></i> Llamanos
+                </a>
+            </p>
         </div>
         <div class="footer-right">
-            <!--<div class="badge"><i class="fas fa-truck-ramp-box"></i> Servido</div>-->
+           <!-- <div class="badge"><i class="fas fa-truck-ramp-box"></i> Servido</div> -->
             <div class="badge"><i class="fas fa-shield-halved"></i> Seguro</div>
             <div class="badge"><i class="fas fa-heart-pulse"></i> Delicado</div>
             <div class="badge"><i class="fas fa-circle-check"></i> Fiable</div>
         </div>
     </footer>
-
     <script src="index.js"></script>
 </body>
 </html>
-
-
-
- 
