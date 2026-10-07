@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>ViAngel Logistics</title>
-    <link rel="stylesheet" href="index.css">
+    <!-- Se agrega parámetro de versión para romper la caché del navegador -->
+    <link rel="stylesheet" href="index.css?v=2">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
@@ -24,11 +25,11 @@
 
         <nav class="menu">
             <!-- SERVICIOS -->
-            <div class="dropdown-mega">
+            <div class="dropdown-mega" onmouseenter="mostrarMenu('menu-servicios')" onmouseleave="ocultarMenu('menu-servicios')">
                 <a href="javascript:void(0)" onclick="abrirModal('servicios')">
                     Servicios <i class="fas fa-chevron-down flecha-icono"></i>
                 </a>
-                <div class="mega-content">
+                <div id="menu-servicios" class="mega-content" style="display: none;">
                     <div class="mega-grid">
                         <div class="mega-col" onclick="abrirModal('servicios')">
                             <h4><i class="fas fa-truck-ramp-box"></i> Servido Aduanero</h4>
@@ -51,11 +52,11 @@
             </div>
 
             <!-- CALCULADORA -->
-            <div class="dropdown-mega">
+            <div class="dropdown-mega" onmouseenter="mostrarMenu('menu-calc')" onmouseleave="ocultarMenu('menu-calc')">
                 <a href="javascript:void(0)" onclick="manejarClickCalculadora()">
                     Calculadora <i class="fas fa-chevron-down flecha-icono"></i>
                 </a>
-                <div class="mega-content" style="min-width: 320px;">
+                <div id="menu-calc" class="mega-content" style="display: none; min-width: 320px;">
                     <div class="mega-grid" style="grid-template-columns: 1fr;">
                         <div class="mega-col" onclick="enfocarCalculadora()">
                             <h4><i class="fas fa-calculator"></i> Cotiza al instante</h4>
@@ -66,11 +67,11 @@
             </div>
 
             <!-- NOSOTROS -->
-            <div class="dropdown-mega">
+            <div class="dropdown-mega" onmouseenter="mostrarMenu('menu-nosotros')" onmouseleave="ocultarMenu('menu-nosotros')">
                 <a href="javascript:void(0)" onclick="abrirModal('nosotros')">
                     Nosotros <i class="fas fa-chevron-down flecha-icono"></i>
                 </a>
-                <div class="mega-content" style="min-width: 300px;">
+                <div id="menu-nosotros" class="mega-content" style="display: none; min-width: 300px;">
                     <div class="mega-grid" style="grid-template-columns: 1fr;">
                         <div class="mega-col" onclick="abrirModal('nosotros')">
                             <h4><i class="fas fa-building"></i> ViAngel Logistics</h4>
@@ -81,11 +82,11 @@
             </div>
 
             <!-- CONTACTO -->
-            <div class="dropdown-mega">
+            <div class="dropdown-mega" onmouseenter="mostrarMenu('menu-contacto')" onmouseleave="ocultarMenu('menu-contacto')">
                 <a href="javascript:void(0)" onclick="manejarClickContacto()">
                     Contacto <i class="fas fa-chevron-down flecha-icono"></i>
                 </a>
-                <div class="mega-content" style="min-width: 320px;">
+                <div id="menu-contacto" class="mega-content" style="display: none; min-width: 320px;">
                     <div class="mega-grid" style="grid-template-columns: 1fr;">
                         <div class="mega-col" onclick="irAContacto()">
                             <h4><i class="fas fa-headset"></i> Asesoría Personalizada</h4>
@@ -158,7 +159,6 @@
                 </div>
 
                 <div style="margin-top: 12px; margin-bottom: 8px; display: flex; flex-direction: column; gap: 8px;">
-                    
                     <div style="display: flex; align-items: center; gap: 6px;">
                         <input type="checkbox" id="extraordinario-check" onchange="validarServiciosEspeciales(this)" style="width: 15px; height: 15px; cursor: pointer;">
                         <label for="extraordinario-check" style="font-size: 11px; font-weight: 700; color: #2563eb; cursor: pointer; text-transform: none; margin: 0;">
@@ -172,7 +172,6 @@
                             Servicio Continuo 24/7 (Doble Chofer) (+60%)
                         </label>
                     </div>
-
                 </div>
 
                 <button class="btn-calc" onclick="calcularFleteViAngel()" id="btn-calcular">CALCULAR COSTO TOTAL</button>
