@@ -249,8 +249,29 @@ body {
         gap: 20px !important;
     }
 
-    .footer-right {
-        flex-direction: column !important;
-        width: 100% !important;
+   .footer-right {
+    flex-direction: column !important;
+    width: 100% !important;
+}
+
+/* AJUSTE PARA PANTALLAS DE CELULARES */
+@media (max-width: 768px) {
+    .dropdown-mega .mega-content {
+        display: none !important;
+    }
+
+    .navbar {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .main-container {
+        flex-direction: column;
+        padding: 10px;
+    }
+
+    .calculator-card {
+        width: 100%;
+        max-width: 100%;
     }
 }
